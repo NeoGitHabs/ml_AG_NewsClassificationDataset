@@ -22,14 +22,18 @@ class CheckNews(nn.Module):
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 vocab = torch.load("vocab_AG_NewsClassificationDataset.pth", map_location=device, weights_only=False)
+classes = {
+    0:'World',
+    1:'Sports',
+    2:'Business',
+    3:'Sci/Tech'
+}
 
 model = CheckNews(len(vocab)).to(device)
 model.load_state_dict(torch.load("model_AG_NewsClassificationDataset.pth", map_location=device))
 model.eval()
 
-app = FastAPI()
-
-class TextIn(BaseModel):
+class TextSchema(BaseModel):
     text: str
 
 tokenizer = get_tokenizer("basic_english")
@@ -39,13 +43,14 @@ def preprocess(text: str):
     ids = [vocab[token] for token in tokens]
     return torch.tensor([ids], dtype=torch.int64, device=device)
 
+app = FastAPI()
 @app.post("/predict")
-def predict(item: TextIn):
+def predict(item: TextSchema):
     x = preprocess(item.text)
     with torch.no_grad():
         pred = model(x)
         label = torch.argmax(pred, dim=1).item()
-    return {"label": vocab[label]}
+    return {"label": classes[label]}
 
 if __name__ == "__main__":
     uvicorn.run(app, host='127.0.0.1', port=8000)
