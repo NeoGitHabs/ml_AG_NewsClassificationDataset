@@ -15,7 +15,7 @@
 News publishers and content aggregators process thousands of articles daily. Manual tagging is slow, inconsistent, and expensive. This model automatically assigns each article to one of four topic categories — World, Sports, Business, or Sci/Tech — reducing editorial overhead and enabling real-time content routing at scale.
 
 ---
-
+ 
 ## Demo
 
 ```bash
