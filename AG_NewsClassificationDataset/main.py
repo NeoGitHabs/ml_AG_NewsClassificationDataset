@@ -3,7 +3,7 @@ import uvicorn
 import torch.nn as nn
 from fastapi import FastAPI
 from pydantic import BaseModel
-from torchtext.data import get_tokenizer
+from torchtext.data.utils import get_tokenizer
 
 
 class CheckNews(nn.Module):
