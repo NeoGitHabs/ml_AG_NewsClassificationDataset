@@ -1,0 +1,14 @@
+Текст: "NASA's James Webb Telescope has discovered a new Earth-like exoplanet orbiting a distant star."
+Ожидаемый класс: Sci/Tech (3)
+
+Текст: "The Federal Reserve announced another interest rate hike to combat rising inflation concerns."
+Ожидаемый класс: Business (2)
+
+Текст: "Real Madrid secured a dramatic victory in the Champions League final with a last-minute goal."
+Ожидаемый класс: Sports (1)
+
+Текст: "Leaked documents reveal a new security flaw in major smartphone operating systems."
+Ожидаемый класс: Sci/Tech (3)
+
+Текст: "United Nations leaders met in Geneva to negotiate a ceasefire agreement in the region."
+Ожидаемый класс: World (0)

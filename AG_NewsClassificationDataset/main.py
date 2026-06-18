@@ -1,9 +1,11 @@
 import torch
 import uvicorn
+import torchtext
 import torch.nn as nn
 from fastapi import FastAPI
 from pydantic import BaseModel
 from torchtext.data.utils import get_tokenizer
+torchtext.disable_torchtext_deprecation_warning()
 
 
 class CheckNews(nn.Module):
@@ -22,28 +24,41 @@ class CheckNews(nn.Module):
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 vocab = torch.load("vocab_AG_NewsClassificationDataset.pth", map_location=device, weights_only=False)
+
+unk_idx = vocab["<unk>"] if "<unk>" in vocab else 0
+vocab.set_default_index(unk_idx)
+
 classes = {
-    0:'World',
-    1:'Sports',
-    2:'Business',
-    3:'Sci/Tech'
+    0: 'World',
+    1: 'Sports',
+    2: 'Business',
+    3: 'Sci/Tech'
 }
 
 model = CheckNews(len(vocab)).to(device)
 model.load_state_dict(torch.load("model_AG_NewsClassificationDataset.pth", map_location=device))
 model.eval()
 
+
 class TextSchema(BaseModel):
     text: str
 
 tokenizer = get_tokenizer("basic_english")
 
+
 def preprocess(text: str):
     tokens = tokenizer(text)
     ids = [vocab[token] for token in tokens]
+
+    if not ids:
+        ids = [unk_idx]
+
     return torch.tensor([ids], dtype=torch.int64, device=device)
 
+
 app = FastAPI()
+
+
 @app.post("/predict")
 def predict(item: TextSchema):
     x = preprocess(item.text)
